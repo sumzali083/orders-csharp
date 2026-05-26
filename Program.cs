@@ -1,25 +1,24 @@
 ﻿using System;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
+
 string[] text = File.ReadAllLines(@"C:\Users\summe\source\repos\sumzali083\orders-csharp\orders.csv");
 
-//Console.WriteLine(text);
 double totalRevenue = 0;
+var productRevenue = new Dictionary<string, double>();
 
-var products = new Dictionary<string, int>();
-
-foreach (string x in text)
+foreach (string x in text.Skip(1))
 {
     string[] columns = x.Split(",");
-    //number of orders
-    //Console.WriteLine(columns[0]);
-    if (columns[10] == "Delivered") {
+
+    // Total revenue from delivered orders
+    if (columns[10] == "Delivered")
+    {
         double revenue = double.Parse(columns[9]);
-        //calculate total revenue
         totalRevenue += revenue;
     }
+
+    // Build up revenue per product
     string productName = columns[3];
     double lineTotal = double.Parse(columns[9]);
 
@@ -32,9 +31,11 @@ foreach (string x in text)
         productRevenue[productName] = lineTotal;
     }
 }
-//max orders 
-int max = text.Length - 1;
-Console.WriteLine("number of orders = "+max);
-Console.WriteLine(totalRevenue);
-//what product has the most orders
-Console.WriteLine("Product with the most revenue:" + products);
+
+// Results
+var uniqueOrders = text.Skip(1).Select(x => x.Split(",")[0]).Distinct().Count();
+var topProduct = productRevenue.OrderByDescending(p => p.Value).First();
+
+Console.WriteLine($"Number of orders: {uniqueOrders}");
+Console.WriteLine($"Total delivered revenue: £{totalRevenue:F2}");
+Console.WriteLine($"Top product: {topProduct.Key} - £{topProduct.Value:F2}");
