@@ -22,6 +22,8 @@ var categoryOrders = new Dictionary<string, int>();
 
 // region -> (sum, count) to compute average
 var regionStats = new Dictionary<string, (double sum, int count)>();
+// Which day of the week gets the most orders?
+var dayOfWeekOrders = new Dictionary<string, int>();
 
 foreach (var line in lines.Skip(1))
 {
@@ -59,6 +61,7 @@ foreach (var line in lines.Skip(1))
         else
             regionStats[region] = (orderAmount, 1);
     }
+    var dayOfWeek = columns[2]
 }
 
 // Results
